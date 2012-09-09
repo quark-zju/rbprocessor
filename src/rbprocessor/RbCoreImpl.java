@@ -9,6 +9,15 @@ import org.jruby.embed.EvalFailedException;
 import org.jruby.embed.ParseFailedException;
 import org.jruby.embed.ScriptingContainer;
 
+/**
+ * Simple JRuby interface.
+ * This class is intended to be loaded 
+ * by RbProcessor via MyClassLoader and
+ * casted to RbCore to resolve Linkage 
+ * problems.
+ * 
+ * @author Wu Jun <quark@zju.edu.cn>
+ */
 public class RbCoreImpl extends RbCore {
 
     private ScriptingContainer container;

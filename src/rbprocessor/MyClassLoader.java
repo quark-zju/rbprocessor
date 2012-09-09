@@ -8,6 +8,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Custom class loader, load class from custom URLs, if failed
+ * or class name is blacklisted, load from parent class loader.
+ * 
+ * @author Wu Jun <quark@zju.edu.cn>
+ */
 public class MyClassLoader extends URLClassLoader {
 
     private static boolean DEBUG = false;
