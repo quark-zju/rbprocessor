@@ -10,23 +10,48 @@ import org.jruby.embed.ParseFailedException;
 import org.jruby.embed.ScriptingContainer;
 
 /**
- * Simple JRuby interface.
- * This class is intended to be loaded 
- * by RbProcessor via MyClassLoader and
- * casted to RbCore to resolve Linkage 
- * problems.
- * 
+ * Simple JRuby interface. This class is intended to be loaded by RbProcessor
+ * via MyClassLoader and casted to RbCore to resolve Linkage problems.
+ *
  * @author Wu Jun <quark@zju.edu.cn>
  */
 public class RbCoreImpl extends RbCore {
 
     private ScriptingContainer container;
+    private long newestScriptTime = -1;
     private static LocalPreferences pref = LocalPreferences.getInstance();
     private static boolean DEBUG = false;
+    private static String[] userScriptPaths;
 
     {
         DEBUG = pref.getBoolean("rbprocessor.debug", false);
         MyClassLoader.setDebug(DEBUG);
+
+        userScriptPaths = new String[]{
+            pref.getProperty("rbprocessor.scriptpath", "rbprocessor.rb"),
+            System.getProperty("user.home") + "/.rbprocessor.rb",
+            System.getProperty("user.home") + "/.config/rbprocessor.rb"
+        };
+    }
+
+    private void loadUserScriptOnDemand() throws FileNotFoundException {
+        for (String path : userScriptPaths) {
+            File file = new File(path);
+            if (!file.exists()) {
+                continue;
+            }
+
+            if (file.lastModified() > newestScriptTime) {
+                if (DEBUG) {
+                    System.err.println("Loading Script: " + path);
+                }
+                container.runScriptlet(new FileInputStream(file), path);
+                newestScriptTime = file.lastModified();
+            }
+            return;
+        }
+
+        throw new FileNotFoundException(userScriptPaths[0]);
     }
 
     public RbCoreImpl() throws FileNotFoundException {
@@ -37,31 +62,20 @@ public class RbCoreImpl extends RbCore {
         //
         // See http://www.ruby-forum.com/topic/664018
         container.setClassLoader(container.getClass().getClassLoader());
-        
+
         container.setCompatVersion(CompatVersion.RUBY1_9);
 
-        String[] userScriptPaths = {
-            pref.getProperty("rbprocessor.scriptpath", "rbprocessor.rb"),
-            System.getProperty("user.home") + "/.rbprocessor.rb",
-            System.getProperty("user.home") + "/.config/rbprocessor.rb"
-        };
-
-        for (String path : userScriptPaths) {
-            File file = new File(path);
-            if (file.exists()) {
-                if (DEBUG) {
-                    System.err.println("Loading Script: " + path);
-                }
-                container.runScriptlet(new FileInputStream(file), path);
-                return;
-            }
-        }
-
-        throw new FileNotFoundException(userScriptPaths[0]);
+        loadUserScriptOnDemand();
     }
 
     @Override
     public Object[] runScript(String script) {
+        try {
+            loadUserScriptOnDemand();
+        } catch (FileNotFoundException ex) {
+            ;
+        }
+
         Object[] results = null;
         try {
             results = (Object[]) container.runScriptlet("Array[" + script + "].flatten.to_java");

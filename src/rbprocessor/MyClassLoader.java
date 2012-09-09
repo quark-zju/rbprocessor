@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Custom class loader, load class from custom URLs, if failed
- * or class name is blacklisted, load from parent class loader.
- * 
+ * Custom class loader, load class from custom URLs, if failed or class name is
+ * blacklisted, load from parent class loader.
+ *
  * @author Wu Jun <quark@zju.edu.cn>
  */
 public class MyClassLoader extends URLClassLoader {
@@ -28,7 +28,7 @@ public class MyClassLoader extends URLClassLoader {
         super(urls);
         this.blacklistClasses.addAll(Arrays.asList(blacklist));
     }
-    
+
     public static void setDebug(boolean newDebug) {
         DEBUG = newDebug;
     }

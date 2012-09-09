@@ -28,6 +28,8 @@ rbprocessor.rb
         processed_src
     end
 
+`rbprocessor.rb` is reloaded on the fly if change detected.
+
 
 Dependencies
 ============

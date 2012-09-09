@@ -10,11 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Ruby Processor.
- * A sub plug-in for TopCoder Arena plug-in CodeProcessor,
- * use external Ruby script to pre/post process code and
- * define custom tags.
- * 
+ * Ruby Processor. A sub plug-in for TopCoder Arena plug-in CodeProcessor, use
+ * external Ruby script to pre/post process code and define custom tags.
+ *
  * @author Wu Jun <quark@zju.edu.cn>
  */
 public class RbProcessor {
