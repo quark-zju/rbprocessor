@@ -4,14 +4,16 @@ JAVAC_FLAGS=-d bin -Xlint:unchecked -cp src:lib/jruby-complete.jar:lib/ContestAp
 
 all: rbprocessor.jar
 
-lib: lib/jruby-complete.jar lib/ContestApplet.jar 
+lib: lib/jruby-complete.jar lib/ContestApplet.jar
 	-@mkdir -p bin
 	true
 
 lib/jruby-complete.jar:
+	-@mkdir -p lib
 	wget http://jruby.org.s3.amazonaws.com/downloads/1.7.0.preview2/jruby-complete-1.7.0.preview2.jar -O $@
 
 lib/ContestApplet.jar:
+	-@mkdir -p lib
 	wget http://community.topcoder.com/contest/classes/ContestApplet.jar -O $@
 
 bin/%.class: src/%.java
