@@ -5,13 +5,19 @@ RbProcessor is a CodeProcessor plug-in that use Ruby script to preprocess and po
 Installation
 ============
 1. Download `rbprocessor.jar` from [download page](/quark-zju/rbprocessor/downloads).
+
 2. Append `rbprocessor.jar` to CodeProcessor class path.
+
    * Use ':' as separator in Linux.
+
 3. Configure CodeProcessor
+
    * Use 'popsedit.EntryPoint' or Standard Editor as the Editor
+
      * [Poopsedit](http://community.topcoder.com/contest/classes/PopsEdit/PopsEdit.jar) is a standalone plugin.
      * Standard Editor's highlighting may not work. It seems it is caused by some bug of CodeProcessor.
      * Use FileEdit if you known what happens.
+
    *  Use 'rbprocessor.RbProcessor' as the CodeProcessor.
 
 4. Write `$HOME/.config/rbprocessor.rb` or `$HOME/.rbprocessor.rb`.
@@ -38,17 +44,22 @@ Note: the builtin script is still a working-in-progress, may contain bugs.
 
 The builtin script does:
 * Code templates for C++, C#, Java and VB
+
     * Append problem description to code automatically. This can be disabled by
       `NO_PROBLEMDESC=true`
 
 * Test code templates for C++, C#, Java and VB
+
     * Colorful output by default, can be disabled by `USE_COLOR=false`
 
 * [Fileedit](http://community.topcoder.com/contest/classes/FileEdit/FileEdit.htm)-like external editor support
+
     * Can be disabled by `NO_CODE_DIR=true`. Do this if you use internal
       editor.
+
     * Code will be saved to `/tmp/tc/` by default, can be changed by `CODE_DIR`
       environment variable.
+
     * Do not overwrite code by default, set `CODE_OVERWRITE=true` to
       always overwrite external code.
 
@@ -65,27 +76,27 @@ Content
 ------
 `rbprocessor.rb` is Ruby 1.9 script, and should have two methods:
 
-    ```ruby
-    def preprocess(src, lang, prob, render)
-        # $src, $lang, $prob, $render are available too
+```ruby
+def preprocess(src, lang, prob, render)
+    # $src, $lang, $prob, $render are available too
 
-        # Makes $HELLO$ tag available
-        user_tags     = { hello: 'world' }
+    # Makes $HELLO$ tag available
+    user_tags     = { hello: 'world' }
 
-        # If you want to use FileEdit's code template,
-        # set processed_src to ''
-        processed_src = "main() {\n\n}"
+    # If you want to use FileEdit's code template,
+    # set processed_src to ''
+    processed_src = "main() {\n\n}"
 
-        [processed_src, user_tags]
-    end
+    [processed_src, user_tags]
+end
 
-    def postprocess(src, lang)
-        processed_src = src.gsub(/^\s+$/, '')
+def postprocess(src, lang)
+    processed_src = src.gsub(/^\s+$/, '')
 
-        # postprocess only process code, no user tags
-        processed_src
-    end
-    ```
+    # postprocess only process code, no user tags
+    processed_src
+end
+```
 
 See [CodeProcess Documentation](http://community.topcoder.com/contest/classes/CodeProcessor/How%20to%20use%20CodeProcessor%20v2.htm) for details.
 
