@@ -24,14 +24,18 @@ public class RbCoreImpl extends RbCore {
     private static String[] userScriptPaths;
 
     {
-        DEBUG = pref.getBoolean("rbprocessor.debug", false);
-        MyClassLoader.setDebug(DEBUG);
+        DEBUG = pref.getProperty("rbprocessor.debug", "false").equals("true");
 
         userScriptPaths = new String[]{
             pref.getProperty("rbprocessor.scriptpath", "rbprocessor.rb"),
             System.getProperty("user.home") + "/.rbprocessor.rb",
             System.getProperty("user.home") + "/.config/rbprocessor.rb"
         };
+
+        if (DEBUG) {
+            System.err.println("rbprocessor.debug = " + DEBUG);
+            System.err.println("rbprocessor.scriptpath = " + userScriptPaths[0]);
+        }
     }
 
     private void loadUserScriptOnDemand() throws FileNotFoundException {

@@ -91,7 +91,7 @@ public class RbProcessor {
             source = (String) results[0];
         }
 
-        if (pref.getBoolean("rbprocessor.poweredby", true)) {
+        if (pref.getProperty("rbprocessor.poweredby", "true").equals("true")) {
             String commentPrefix = language.getName().equals("VB") ? "'" : "//";
             if (source.indexOf(poweredBy) <= 0) {
                 source += "\n" + commentPrefix + poweredBy;

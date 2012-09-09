@@ -29,10 +29,6 @@ public class MyClassLoader extends URLClassLoader {
         this.blacklistClasses.addAll(Arrays.asList(blacklist));
     }
 
-    public static void setDebug(boolean newDebug) {
-        DEBUG = newDebug;
-    }
-
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         Class<?> klass = findLoadedClass(name);
