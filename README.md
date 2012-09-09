@@ -5,6 +5,13 @@ Install
 1. Download `rbprocessor.jar` from download page
 2. Append `rbprocessor.jar` to CodeProcessor class path
 3. Prepare a `$HOME/.config/rbprocessor.rb` or `$HOME/.rbprocessor.rb`.
+4. Configure CodeProcessor:
+
+    *  Use 'popsedit.EntryPoint' or 'fileedit.EntryPoint' as the Editor
+       (If you use Standard Editor, code highlighting may not working.
+        You can do fileedit things in ruby script, see following).
+    *  Use 'rbprocessor.RbProcessor' as the CodeProcessor.
+ 
 
 rbprocessor.rb
 ==============
