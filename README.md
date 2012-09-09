@@ -1,5 +1,7 @@
 RbProcessor is a CodeProcessor plug-in that use external Ruby script to preprocess and postprocess code.
 
+[CodeProcessor](http://community.topcoder.com/contest/classes/CodeProcessor/CodeProcessor.jar) is a [TopCoder Arena plug-in](http://community.topcoder.com/tc?module=Static&d1=applet&d2=plugins).
+
 Install
 =======
 1. Download `rbprocessor.jar` from download page
@@ -98,6 +100,6 @@ Build
 Build
 =====
 `make` and you will get `rbprocessor.jar`. 
-Links in `Makefile` may expire, you may need to manually find
-`jruby-complete.jar` and `ContestApplet.jar`.
+
+Links in `Makefile` may expire, you may need to manually find `jruby-complete.jar` and `ContestApplet.jar` then.
 
