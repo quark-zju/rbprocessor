@@ -17,7 +17,9 @@ rbprocessor.rb
 ==============
 `rbprocessor.rb` must have two methods:
 
-    def preprocess(src, lang, prob)
+    def preprocess(src, lang, prob, render)
+        # @src, @lang, @prob, @render are available too
+
         # Makes $HELLO$ tag available
         user_tags     = { hello: 'world' }
 

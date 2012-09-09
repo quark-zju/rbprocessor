@@ -61,8 +61,9 @@ public class RbProcessor {
         rb.setVariable("@src", source);
         rb.setVariable("@prob", component);
         rb.setVariable("@lang", language);
+        rb.setVariable("@render", renderer);
 
-        Object[] results = rb.runScript("preprocess(@src, @lang, @prob)");
+        Object[] results = rb.runScript("preprocess(@src, @lang, @prob, @render)");
 
         switch (results.length) {
             case 0:
