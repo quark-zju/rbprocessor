@@ -37,7 +37,9 @@ rbprocessor.rb
         processed_src
     end
 
-`rbprocessor.rb` is reloaded on the fly if change detected.
+See [CodeProcess Documentation](http://community.topcoder.com/contest/classes/CodeProcessor/How%20to%20use%20CodeProcessor%20v2.htm) for details.
+
+`rbprocessor.rb` will be reloaded on the fly if change detected.
 
 
 Dependencies
@@ -68,7 +70,7 @@ You can change some options by editing this file:
 
     Hide "Powered by" line.
 
-* `rbprocessor.debug=true` to hide "Powered by" line.
+* `rbprocessor.debug=true`
 
     Print debug messages to stderr.
 
