@@ -195,7 +195,6 @@ int main(int argc, char* argv[]) {
       end
     end
 
-    # not supported
     def testcode
       ERB.new(<<-'EOS'
     Sub _ap(ByRef s As Object(), ByVal prefix As String)
