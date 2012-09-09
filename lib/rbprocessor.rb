@@ -1,11 +1,13 @@
 # External source code directory, nil disables external editing
-CODE_DIR    = '/tmp/tc' 
+CODE_DIR    = ENV['NO_CODE_DIR'] ? nil : (ENV['CODE_DIR'] || '/tmp/tc')
 # Overwrite external source file if it exists?
-OVERWRITE   = false
+OVERWRITE   = (ENV['CODE_OVERWRITE'].to_s.downcase == 'true')
+USE_COLOR   = ((ENV['USE_COLOR'] || 'true').to_s.downcase == 'true')
 
 CUT_BEGIN   = "BEGIN CUT HERE"
 CUT_END     = "END CUT HERE"
 EXEDIT_TIP  = "Please use external editor to edit:\n" 
+PROBLEMDESC = ENV['NO_PROBLEMDESC'] ? '' : "\n$PROBLEMDESC$"
 
 CARET_POS   = ''
 
@@ -55,7 +57,7 @@ class TestCodeGenerator
   end
 
   def color_str(content, mode = 1)
-    "#{@color_code}#{mode}m#{content}#{@color_code}0m"
+    USE_COLOR ? "#{@color_code}#{mode}m#{content}#{@color_code}0m" : content
   end
 
   def print_expr(*vars); nil end
@@ -269,8 +271,7 @@ public class $CLASSNAME$ {
 $TESTCODE$
 $MAINCODE$
 }
-
-$PROBLEMDESC$
+<%= PROBLEMDESC %>
     EOS
   when 'C++'
     ERB.new <<-EOS
@@ -290,8 +291,7 @@ $TESTCODE$
 };
 
 $MAINCODE$
-
-$PROBLEMDESC$
+<%= PROBLEMDESC %>
 // vim: nowrap et ts=4 sw=4
     EOS
   when 'C#'
@@ -309,8 +309,7 @@ public class $CLASSNAME$ {
 $TESTCODE$
 $MAINCODE$
 }
-
-$PROBLEMDESC$
+<%= PROBLEMDESC %>
     EOS
   when 'VB'
     ERB.new <<-EOS
@@ -330,8 +329,7 @@ Public Class $CLASSNAME$
 $TESTCODE$
 $MAINCODE$
 End Class
-
-$PROBLEMDESC$
+<%= PROBLEMDESC %>
     EOS
   end.result(binding)
 end

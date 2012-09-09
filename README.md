@@ -10,7 +10,7 @@ Install
 
     *  Use 'popsedit.EntryPoint' or Standard Editor as the Editor
        (If you use Standard Editor, code highlighting may not working.
-        You can do fileedit things in ruby script, thuns fileedit is
+        You can do fileedit things in ruby script, thus fileedit is
         not so useful, see following).
     *  Use 'rbprocessor.RbProcessor' as the CodeProcessor.
 
@@ -28,10 +28,37 @@ Location
 * $HOME/.config/rbprocessor.rb
 * $HOME/.rbprocessor.rb
 
-RbProcessor has one buildin `rbprocessor.rb`.
-If RbProcessor can not find above files, builtin one will be used.
-
 Other location is possible by editing `contestapplet.conf`, see below.
+
+Builtin
+-------
+If RbProcessor can not find any of above files, a builtin script will be used.
+
+Note: the builtin script is still a working-in-progress, may contain bugs.
+
+The builtin script does:
+* Code templates for C++, C#, Java and VB
+
+    * Append problem description to code automatically. This can be disabled by
+      `NO_PROBLEMDESC=true`
+
+* Test code templates for C++, C#, Java and VB
+
+    * Colorful output by default, can be disabled by `USE_COLOR=false`
+
+* [Fileedit](http://community.topcoder.com/contest/classes/FileEdit/FileEdit.htm)-like external editor support
+
+    * Can be disabled by `NO_CODE_DIR=true`. Do this if you use internal
+      editor.
+    * Code will be saved to `/tmp/tc/` by default, can be changed by `CODE_DIR`
+      environment variable.
+    * Do not overwrite code by default, set `CODE_OVERWRITE=true` to
+      always overwrite external code.
+
+* Postprocessor code (remove code between $BEGINCUT$ and $ENDCUT$)
+
+It is recommended to read the source to see how it works.
+
 
 Reload
 ------
@@ -101,5 +128,5 @@ Build
 =====
 `make` and you will get `rbprocessor.jar`. 
 
-Links in `Makefile` may expire, you may need to manually find `jruby-complete.jar` and `ContestApplet.jar` then.
+Links in `Makefile` may expire, in that case you may need to manually find `jruby-complete.jar` and `ContestApplet.jar`.
 
