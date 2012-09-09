@@ -45,8 +45,12 @@ public class RbCoreImpl extends RbCore {
                 if (DEBUG) {
                     System.err.println("Loading Script: " + path);
                 }
-                container.runScriptlet(new FileInputStream(file), path);
-                newestScriptTime = file.lastModified();
+                try {
+                    container.runScriptlet(new FileInputStream(file), path);
+                    newestScriptTime = file.lastModified();
+                } catch (ParseFailedException | EvalFailedException ex) {
+                    System.err.println("Script Error: " + path + ": " + ex);
+                }
             }
             return;
         }
