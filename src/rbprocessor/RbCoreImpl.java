@@ -50,6 +50,17 @@ public class RbCoreImpl extends RbCore {
                     System.err.println("Loading Script: " + path);
                 }
                 try {
+                    container = new ScriptingContainer();
+
+                    // Set container's classLoader to (MyClassLoader) to resolve
+                    // loading issues.
+                    //
+                    // See http://www.ruby-forum.com/topic/664018
+                    container.setClassLoader(container.getClass().getClassLoader());
+
+                    // Use Ruby 1.9
+                    container.setCompatVersion(CompatVersion.RUBY1_9);
+
                     container.runScriptlet(new FileInputStream(file), path);
                     newestScriptTime = file.lastModified();
                 } catch (ParseFailedException | EvalFailedException ex) {
@@ -63,16 +74,6 @@ public class RbCoreImpl extends RbCore {
     }
 
     public RbCoreImpl() throws FileNotFoundException {
-        container = new ScriptingContainer();
-
-        // Set container's classLoader to (MyClassLoader) to resolve
-        // loading issues.
-        //
-        // See http://www.ruby-forum.com/topic/664018
-        container.setClassLoader(container.getClass().getClassLoader());
-
-        container.setCompatVersion(CompatVersion.RUBY1_9);
-
         loadUserScriptOnDemand();
     }
 
