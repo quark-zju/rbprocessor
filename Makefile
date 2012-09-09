@@ -19,9 +19,10 @@ lib/ContestApplet.jar:
 bin/%.class: src/%.java
 	javac $(JAVAC_FLAGS) $^
 
-rbprocessor.jar: bin/rbprocessor/RbProcessor.class bin/rbprocessor/MyClassLoader.class bin/rbprocessor/RbCore.class bin/rbprocessor/RbCoreImpl.class
+rbprocessor.jar: bin/rbprocessor/RbProcessor.class bin/rbprocessor/MyClassLoader.class bin/rbprocessor/RbCore.class bin/rbprocessor/RbCoreImpl.class lib/rbprocessor.rb
 	cp lib/jruby-complete.jar $@
 	jar uf $@ -C bin .
+	jar uf $@ lib/rbprocessor.rb
 
 clean:
 	-rm -rf rbprocessor.jar bin/*

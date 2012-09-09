@@ -4,6 +4,7 @@ import com.topcoder.client.contestApplet.common.LocalPreferences;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import org.jruby.CompatVersion;
 import org.jruby.embed.EvalFailedException;
 import org.jruby.embed.ParseFailedException;
@@ -50,6 +51,8 @@ public class RbCoreImpl extends RbCore {
                     System.err.println("Loading Script: " + path);
                 }
                 try {
+                    newestScriptTime = -1;
+
                     container = new ScriptingContainer();
 
                     // Set container's classLoader to (MyClassLoader) to resolve
@@ -67,6 +70,21 @@ public class RbCoreImpl extends RbCore {
                     System.err.println("Script Error: " + path + ": " + ex);
                 }
             }
+            return;
+        }
+
+        // Fallback to builtin rbprocessor.rb
+        if (newestScriptTime < 0) {
+            InputStream is = RbCoreImpl.class.getResourceAsStream("/lib/rbprocessor.rb");
+            if (DEBUG) {
+                System.err.println("Loading Fallback Script ");
+            }
+            container = new ScriptingContainer();
+            container.setClassLoader(container.getClass().getClassLoader());
+            container.setCompatVersion(CompatVersion.RUBY1_9);
+            container.runScriptlet(is, "(rbprocessor.fallback.rb)");
+            newestScriptTime = 0;
+            
             return;
         }
 
