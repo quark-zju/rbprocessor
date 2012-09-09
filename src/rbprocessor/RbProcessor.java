@@ -58,12 +58,12 @@ public class RbProcessor {
     }
 
     public String preProcess(String source, ProblemComponentModel component, Language language, Renderer renderer) {
-        rb.setVariable("@src", source);
-        rb.setVariable("@prob", component);
-        rb.setVariable("@lang", language);
-        rb.setVariable("@render", renderer);
+        rb.setVariable("$src", source);
+        rb.setVariable("$prob", component);
+        rb.setVariable("$lang", language);
+        rb.setVariable("$render", renderer);
 
-        Object[] results = rb.runScript("preprocess(@src, @lang, @prob, @render)");
+        Object[] results = rb.runScript("preprocess($src, $lang, $prob, $render)");
 
         switch (results.length) {
             case 0:
@@ -82,10 +82,10 @@ public class RbProcessor {
     }
 
     public String postProcess(String source, Language language) {
-        rb.setVariable("@src", source);
-        rb.setVariable("@lang", language);
+        rb.setVariable("$src", source);
+        rb.setVariable("$lang", language);
 
-        Object[] results = rb.runScript("postprocess(@src, @lang)");
+        Object[] results = rb.runScript("postprocess($src, $lang)");
 
         if (results.length >= 1) {
             source = (String) results[0];
