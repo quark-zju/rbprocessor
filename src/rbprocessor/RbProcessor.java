@@ -19,6 +19,7 @@ public class RbProcessor {
 
     private static LocalPreferences pref = LocalPreferences.getInstance();
     private static MyClassLoader loader;
+    private static String poweredBy = " Powered by RbProcessor v0.1";
     private RbCore rb;
     private Map<String, String> tags = new HashMap<>();
 
@@ -91,7 +92,9 @@ public class RbProcessor {
 
         if (pref.getBoolean("rbprocessor.poweredby", true)) {
             String commentPrefix = language.getName().equals("VB") ? "'" : "//";
-            source += "\n" + commentPrefix + " Powered by RbProcessor v0.1";
+            if (source.indexOf(poweredBy) <= 0) {
+                source += "\n" + commentPrefix + poweredBy;
+            }
         }
 
         return source;
