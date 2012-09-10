@@ -1,12 +1,8 @@
 JAVAC_FLAGS=-d bin -Xlint:unchecked -cp src:lib/jruby-complete.jar:lib/ContestApplet.jar -source 7
 
-.PHONY: all clean lib
+.PHONY: all clean
 
 all: rbprocessor.jar
-
-lib: lib/jruby-complete.jar lib/ContestApplet.jar
-	-@mkdir -p bin
-	true
 
 lib/jruby-complete.jar:
 	-@mkdir -p lib
@@ -16,10 +12,10 @@ lib/ContestApplet.jar:
 	-@mkdir -p lib
 	wget http://community.topcoder.com/contest/classes/ContestApplet.jar -O $@
 
-bin/%.class: src/%.java
-	javac $(JAVAC_FLAGS) $^
+bin/%.class: src/%.java lib/jruby-complete.jar lib/ContestApplet.jar
+	javac $(JAVAC_FLAGS) $<
 
-rbprocessor.jar: bin/rbprocessor/RbProcessor.class bin/rbprocessor/MyClassLoader.class bin/rbprocessor/RbCore.class bin/rbprocessor/RbCoreImpl.class lib/rbprocessor.rb
+rbprocessor.jar: bin/rbprocessor/RbProcessor.class bin/rbprocessor/MyClassLoader.class bin/rbprocessor/RbCore.class bin/rbprocessor/RbCoreImpl.class lib/rbprocessor.rb lib/jruby-complete.jar
 	cp lib/jruby-complete.jar $@
 	jar uf $@ -C bin .
 	jar uf $@ lib/rbprocessor.rb
