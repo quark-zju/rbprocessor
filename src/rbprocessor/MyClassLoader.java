@@ -51,9 +51,6 @@ public class MyClassLoader extends URLClassLoader {
                 }
             }
         } catch (ClassNotFoundException e) {
-            if (DEBUG) {
-                System.err.println("Class: " + name + " ... using parent's");
-            }
             klass = null;
         }
 
@@ -81,6 +78,10 @@ public class MyClassLoader extends URLClassLoader {
             //
             // Not using 'super' here because parent class loader
             // could be non-standard too.
+            if (DEBUG) {
+                System.err.println("Class: " + name + " ... using parent's");
+            }
+
             ClassLoader parentLoader = MyClassLoader.class.getClassLoader();
             klass = parentLoader.loadClass(name);
 

@@ -30,8 +30,8 @@ public class RbCoreImpl extends RbCore {
         userScriptPaths = new String[]{
             pref.getProperty("rbprocessor.scriptpath", "rbprocessor.rb"),
             System.getProperty("user.home") + "/.rbprocessor.rb",
-            System.getProperty("user.home") + "/.config/rbprocessor.rb"
-        };
+            System.getProperty("user.home") + "/.config/rbprocessor.rb",
+            "(rbprocessor.fallback.rb)",};
 
         if (DEBUG) {
             System.err.println("rbprocessor.debug = " + DEBUG);
@@ -41,50 +41,46 @@ public class RbCoreImpl extends RbCore {
 
     private void loadUserScriptOnDemand() throws FileNotFoundException {
         for (String path : userScriptPaths) {
-            File file = new File(path);
-            if (!file.exists()) {
-                continue;
-            }
+            InputStream is;
+            long currentScriptTime;
 
-            if (file.lastModified() > newestScriptTime) {
+            if (path.startsWith("(")) {
+                // Fallback to builtin rbprocessor.rb
+                if (DEBUG) {
+                    System.err.println("Loading Fallback Script");
+                }
+                is = RbCoreImpl.class.getResourceAsStream("/lib/rbprocessor.rb");
+                currentScriptTime = -1;
+            } else {
+                File file = new File(path);
+                if (!file.exists() || file.lastModified() <= newestScriptTime) {
+                    continue;
+                }
                 if (DEBUG) {
                     System.err.println("Loading Script: " + path);
                 }
-                try {
-                    newestScriptTime = -1;
-
-                    container = new ScriptingContainer();
-
-                    // Set container's classLoader to (MyClassLoader) to resolve
-                    // loading issues.
-                    //
-                    // See http://www.ruby-forum.com/topic/664018
-                    container.setClassLoader(container.getClass().getClassLoader());
-
-                    // Use Ruby 1.9
-                    container.setCompatVersion(CompatVersion.RUBY1_9);
-
-                    container.runScriptlet(new FileInputStream(file), path);
-                    newestScriptTime = file.lastModified();
-                } catch (ParseFailedException | EvalFailedException ex) {
-                    System.err.println("Script Error: " + path + ": " + ex);
-                }
+                is = new FileInputStream(file);
+                currentScriptTime = file.lastModified();
             }
-            return;
-        }
 
-        // Fallback to builtin rbprocessor.rb
-        if (newestScriptTime < 0) {
-            InputStream is = RbCoreImpl.class.getResourceAsStream("/lib/rbprocessor.rb");
-            if (DEBUG) {
-                System.err.println("Loading Fallback Script ");
+            try {
+                newestScriptTime = -1;
+                container = new ScriptingContainer();
+
+                // Set container's classLoader to (MyClassLoader) to resolve
+                // loading issues.
+                //
+                // See http://www.ruby-forum.com/topic/664018
+                container.setClassLoader(container.getClass().getClassLoader());
+
+                // Use Ruby 1.9
+                container.setCompatVersion(CompatVersion.RUBY1_9);
+
+                container.runScriptlet(is, path);
+                newestScriptTime = currentScriptTime;
+            } catch (ParseFailedException | EvalFailedException ex) {
+                System.err.println("Script Error: " + path + ": " + ex);
             }
-            container = new ScriptingContainer();
-            container.setClassLoader(container.getClass().getClassLoader());
-            container.setCompatVersion(CompatVersion.RUBY1_9);
-            container.runScriptlet(is, "(rbprocessor.fallback.rb)");
-            newestScriptTime = 0;
-            
             return;
         }
 
