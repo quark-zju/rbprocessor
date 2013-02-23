@@ -81,7 +81,7 @@ class TestCodeGenerator
         if (kase == ++no || kase < 0) { // <%= i %><% n = kase.input.size %><% kase.input.zip([*0...n], $prob.param_types).each do |input, id, type| %>
             <%= param id, type, input %>;<% end %>
             <%= param 'r', $prob.return_type, kase.output %>;
-            if (_verify(no, _r, <%= $prob.method_name %>(<%= n.times.to_a.map{|j| "_#{j}" }.join(', ') %>))) { failed = no + 1; <%= print_expr color_str("\tInput\n", '4;33') %><%= n.times.map {|j| "_ap(_#{j}, \"\\t\");" }.join %> }
+            if (_verify(no, _r, <%= $prob.method_name %>(<%= n.times.to_a.map{|j| "_#{j}" }.join(', ') %>))) { failed = no + 1; <%= print_expr color_str("\tInput\n", '4;33') %><%= n.times.map {|j| "_ap(_#{j}, \"\\t\");" }.join %> } else passed++;
         }<% end %>
         return failed != 0 ? failed : (passed == 0 ? -1 : 0);
     }
@@ -179,6 +179,11 @@ int main(int argc, char* argv[]) {
   end
 
   class VBTestCodeGenerator < self
+    def initialize
+      super
+      @color_code = '" & Chr(27) & "['
+    end
+
     def print_expr(*vars)
       "Console.Write \"#{vars.size.times.map{|i| "{#{i}}" }.join}\", #{vars.map{|s| s.is_a?(Symbol) ? s : s.inspect }.join(', ')}"
     end
@@ -218,13 +223,14 @@ int main(int argc, char* argv[]) {
         If kase = (No = No + 1) Or (kase < 0) Then ' <%= i %><% n = kase.input.size %><% kase.input.zip([*0...n], $prob.param_types).each do |input, id, type| %>
             <%= param id, type, input %><% end %>
             <%= param 'r', $prob.return_type, kase.output %>
-            If Verify(No, _r, <%= $prob.method_name %>(<%= n.times.to_a.map{|j| "_#{j}" }.join(', ') %>)) Then Failed = No + 1 : <%= print_expr color_str("\tInput\n", '4;33') %>:<%= n.times.map {|j| "_ap(_#{j}, \"\\t\")" }.join(':') %>
+            If Verify(No, _r, <%= $prob.method_name %>(<%= n.times.to_a.map{|j| "_#{j}" }.join(', ') %>)) Then Failed = No + 1 : <%= print_expr color_str("\tInput\n", '4;33') %>:<%= n.times.map {|j| "_ap(_#{j}, \"\\t\")" }.join(':') %> Else Passed = Passed + 1
         End If<% end %>
         If Failed <> 0 Then Return Failed Else If Passed = 0 Then Return -1 Else Return 0
     End Function
       EOS
       ).result(binding)
     end
+
     def maincode
       ERB.new(<<-'EOS'
     Shared Sub Main()
