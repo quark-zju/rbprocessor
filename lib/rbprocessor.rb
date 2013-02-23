@@ -76,7 +76,7 @@ class TestCodeGenerator
 
   def testcode
     ERB.new(@ap + <<-'EOS'
-    <%= @bool %> _verify(int No, <%= ret_type %> Expected, <%= ret_type %> Received) { <%= print_expr 'Case ', :No, '  ' %> if (<%= equal_expr($prob.return_type, ['Expected','Received']) %>) { <%= print_expr color_str('PASS', '1;32'), "\n" %> return false;} else { <%= print_expr color_str('FAILED', '1;31'), "\n\tExpected: ", :Expected, "\n\tReceived: ", :Received, "\n" %> return true; } }
+    <%= @bool %> _verify(int No, <%= ret_type %> Expected, <%= ret_type %> Received) { <%= print_expr 'Case ', :No, '  ' %> if (<%= equal_expr($prob.return_type, ['Expected','Received']) %>) { <%= print_expr color_str('PASS', '1;32'), "\n" %> return false;} else { <%= "#{print_expr color_str('FAILED', '1;31'), "\n\tExpected: "}; _ap(Expected); #{print_expr "\n\tReceived: "}; _ap(Received); #{print_expr '\n'}" %> return true; } }
     <%= @public %>int run_test(int kase) { int no = -1, failed = 0, passed = 0;<% $prob.test_cases.each_with_index do |kase, i| %>
         if (kase == ++no || kase < 0) { // <%= i %><% n = kase.input.size %><% kase.input.zip([*0...n], $prob.param_types).each do |input, id, type| %>
             <%= param id, type, input %>;<% end %>
